@@ -1,0 +1,108 @@
+import { useState } from 'react'
+import { Plane, AlertTriangle, TrendingDown, Activity, Clock, BarChart3 } from 'lucide-react'
+import Sidebar from './components/Sidebar'
+import StatCard from './components/StatCard'
+import FlightTable from './components/FlightTable'
+import ExceedancePanel from './components/ExceedancePanel'
+import MaintenancePanel from './components/MaintenancePanel'
+import ImportPanel from './components/ImportPanel'
+import { FlightProfileChart, ExceedanceTrendChart, ExceedancePieChart } from './components/Charts'
+import { mockFleetStats } from './data/mockData'
+
+const sectionTitles: Record<string, string> = {
+  dashboard: 'Dashboard',
+  import: 'Import Flight Data',
+  flights: 'Flight Records',
+  exceedances: 'Exceedance Analysis',
+  analysis: 'Flight Analysis',
+  maintenance: 'Maintenance',
+  settings: 'Settings',
+}
+
+export default function App() {
+  const [activeSection, setActiveSection] = useState('dashboard')
+  const stats = mockFleetStats
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-[#070b14]">
+      <Sidebar activeSection={activeSection} onNavigate={setActiveSection} />
+
+      <main className="flex-1 ml-64 overflow-y-auto scrollbar-thin">
+        <header className="sticky top-0 z-10 bg-[#070b14]/90 backdrop-blur border-b border-slate-800 px-8 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-white font-semibold text-lg">{sectionTitles[activeSection]}</h1>
+            <p className="text-slate-500 text-xs">Air Algérie · Fleet Operations Center</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-slate-500">April 25, 2026 — 08:34 UTC</span>
+            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">AZ</div>
+          </div>
+        </header>
+
+        <div className="p-8 space-y-6">
+          {activeSection === 'dashboard' && (
+            <>
+              <div className="grid grid-cols-3 gap-4">
+                <StatCard title="Total Flights" value={stats.totalFlights} subtitle="Last 7 days" icon={Plane} color="blue" trend={{ value: 12, positive: true }} />
+                <StatCard title="Exceedances" value={stats.totalExceedances} subtitle="Requires review" icon={AlertTriangle} color="amber" trend={{ value: 25, positive: false }} />
+                <StatCard title="Critical Events" value={stats.criticalEvents} subtitle="Immediate action" icon={TrendingDown} color="red" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <StatCard title="Fleet Utilization" value={`${stats.fleetUtilization}%`} subtitle="Aircraft availability" icon={Activity} color="green" />
+                <StatCard title="Avg Flight Time" value={`${stats.avgFlightDuration} min`} subtitle="All routes" icon={Clock} color="purple" />
+                <StatCard title="On-Time Performance" value={`${stats.onTimePerformance}%`} subtitle="Departures & arrivals" icon={BarChart3} color="cyan" trend={{ value: 3, positive: true }} />
+              </div>
+              <FlightProfileChart />
+              <div className="grid grid-cols-2 gap-6">
+                <ExceedanceTrendChart />
+                <ExceedancePieChart />
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <ExceedancePanel />
+                <MaintenancePanel />
+              </div>
+            </>
+          )}
+
+          {activeSection === 'import' && (
+            <div className="max-w-2xl">
+              <p className="text-slate-400 text-sm mb-6">
+                Upload raw flight data files (QAR, FDR, CPL) from Boeing 737/777/787 or ATR 42/72 aircraft.
+                The system will automatically decode and extract flight parameters for analysis.
+              </p>
+              <ImportPanel />
+            </div>
+          )}
+
+          {activeSection === 'flights' && <FlightTable />}
+
+          {activeSection === 'exceedances' && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <ExceedanceTrendChart />
+                <ExceedancePieChart />
+              </div>
+              <ExceedancePanel />
+            </div>
+          )}
+
+          {activeSection === 'analysis' && (
+            <div className="space-y-6">
+              <FlightProfileChart />
+              <FlightTable />
+            </div>
+          )}
+
+          {activeSection === 'maintenance' && <MaintenancePanel />}
+
+          {activeSection === 'settings' && (
+            <div className="max-w-lg bg-[#0d1424] border border-slate-800 rounded-xl p-6 text-slate-400 text-sm">
+              <p className="text-white font-medium mb-4">Application Settings</p>
+              <p>Fleet configuration, user management, and alert thresholds will be configurable here.</p>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  )
+}
