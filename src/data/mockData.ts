@@ -1,6 +1,7 @@
 import type {
-  FlightRecord, Exceedance, FlightParameter,
-  MaintenanceAlert, FleetStats
+  FlightRecord, Exceedance, FlightParameter, MaintenanceAlert,
+  FleetStats, AircraftPosition, FlightRoute, AlertEntry,
+  FuelDataPoint, PilotStats,
 } from '../types/flight'
 
 export const mockFlights: FlightRecord[] = [
@@ -73,3 +74,78 @@ export const exceedancesByMonth = [
   { month: 'Mar', total: 8,  critical: 0 },
   { month: 'Apr', total: 6,  critical: 1 },
 ]
+
+// Live aircraft positions on the map
+export const mockAircraftPositions: AircraftPosition[] = [
+  { id: 'a1', registration: 'CN-ROB', flightNumber: 'AT706', lat: 36.8, lon: -3.2, heading: 42, altitude: 35000, speed: 462, status: 'normal', origin: 'CMN', destination: 'CDG' },
+  { id: 'a2', registration: 'CN-ROC', flightNumber: 'AT602', lat: 31.6, lon: -8.0, heading: 358, altitude: 2200, speed: 145, status: 'warning', origin: 'CMN', destination: 'RAK' },
+  { id: 'a3', registration: 'CN-RGB', flightNumber: 'AT208', lat: 28.5, lon: 18.5, heading: 80, altitude: 37000, speed: 488, status: 'normal', origin: 'CMN', destination: 'DXB' },
+  { id: 'a4', registration: 'CN-RGA', flightNumber: 'AT100', lat: 35.2, lon: -25.4, heading: 300, altitude: 36000, speed: 475, status: 'normal', origin: 'CMN', destination: 'JFK' },
+  { id: 'a5', registration: 'CN-COA', flightNumber: 'AT501', lat: 34.05, lon: -6.8, heading: 170, altitude: 8000, speed: 210, status: 'critical', origin: 'RBA', destination: 'CMN' },
+  { id: 'a6', registration: 'CN-ROD', flightNumber: 'AT834', lat: 35.5, lon: -5.5, heading: 30, altitude: 24000, speed: 390, status: 'normal', origin: 'CMN', destination: 'MAD' },
+  { id: 'a7', registration: 'CN-COB', flightNumber: 'AT503', lat: 32.4, lon: -7.5, heading: 340, altitude: 12000, speed: 240, status: 'normal', origin: 'RAK', destination: 'CMN' },
+  { id: 'a8', registration: 'CN-RGC', flightNumber: 'AT900', lat: 39.5, lon: -9.2, heading: 355, altitude: 36000, speed: 480, status: 'warning', origin: 'CMN', destination: 'LHR' },
+  { id: 'a9', registration: 'CN-ROE', flightNumber: 'AT712', lat: 33.5, lon: -3.8, heading: 90, altitude: 31000, speed: 445, status: 'normal', origin: 'CMN', destination: 'TUN' },
+  { id: 'a10', registration: 'CN-ROF', flightNumber: 'AT520', lat: 30.2, lon: -9.8, heading: 200, altitude: 18000, speed: 310, status: 'normal', origin: 'CMN', destination: 'AGA' },
+  { id: 'a11', registration: 'CN-COC', flightNumber: 'AT614', lat: 35.0, lon: -1.8, heading: 60, altitude: 28000, speed: 420, status: 'normal', origin: 'CMN', destination: 'ALG' },
+  { id: 'a12', registration: 'CN-ROG', flightNumber: 'AT810', lat: 42.5, lon: 1.5, heading: 15, altitude: 37000, speed: 470, status: 'normal', origin: 'CMN', destination: 'BCN' },
+]
+
+// Route polylines: [lat, lon] pairs
+export const mockFlightRoutes: FlightRoute[] = [
+  { from: [33.37, -7.59], to: [49.01, 2.55],   flightNumber: 'AT706' }, // CMN → CDG
+  { from: [33.37, -7.59], to: [51.48, -0.45],  flightNumber: 'AT900' }, // CMN → LHR
+  { from: [33.37, -7.59], to: [40.47, -3.56],  flightNumber: 'AT834' }, // CMN → MAD
+  { from: [33.37, -7.59], to: [25.25, 55.36],  flightNumber: 'AT208' }, // CMN → DXB
+  { from: [33.37, -7.59], to: [40.64, -73.78], flightNumber: 'AT100' }, // CMN → JFK
+  { from: [33.37, -7.59], to: [36.85, 10.23],  flightNumber: 'AT712' }, // CMN → TUN
+  { from: [31.61, -8.04], to: [49.01, 2.55],   flightNumber: 'AT503' }, // RAK → CDG
+  { from: [31.61, -8.04], to: [40.47, -3.56],  flightNumber: 'AT503' }, // RAK → MAD
+  { from: [34.05, -6.75], to: [33.37, -7.59],  flightNumber: 'AT501' }, // RBA → CMN
+]
+
+// Alerts feed
+export const mockAlertsFeed: AlertEntry[] = [
+  { id: 1,  time: '10:33:55', aircraft: '990', flightId: 'AT701',     severity: 'CRITICAL', message: 'High Sink Rate below 1000ft (AT701)' },
+  { id: 2,  time: '10:33:18', aircraft: 'A98', flightId: 'B738-CN-RGB', severity: 'WARNING', message: 'Unstable Approach (Speed High) (B738-CN-RGB)' },
+  { id: 3,  time: '10:33:05', aircraft: '996', flightId: 'B738-CN-0GB', severity: 'WARNING', message: 'Unstable Approach (Speed High) (B738-CN-0GB)' },
+  { id: 4,  time: '10:33:04', aircraft: 'A56', flightId: 'B738-CN-ROB', severity: 'WARNING', message: 'Unstable Approach (Speed High) (B738-CN-ROB)' },
+  { id: 5,  time: '10:33:02', aircraft: '053', flightId: 'AT701',     severity: 'CRITICAL', message: 'High Sink Rate below 1000ft (AT701)' },
+  { id: 6,  time: '10:32:48', aircraft: 'A63', flightId: 'B738-CN-0GB', severity: 'WARNING', message: 'Unstable Approach (Speed High) (B738-CN-0GB)' },
+  { id: 7,  time: '10:31:12', aircraft: 'B21', flightId: 'AT501',     severity: 'CRITICAL', message: 'Excessive Bank Angle in Approach (AT501-CN-COA)' },
+  { id: 8,  time: '10:28:55', aircraft: 'C04', flightId: 'AT900',     severity: 'WARNING',  message: 'Turbulence Load Factor Exceedance (AT900-CN-RGC)' },
+  { id: 9,  time: '10:25:30', aircraft: 'D77', flightId: 'AT208',     severity: 'WARNING',  message: 'N1 Overtravel on Takeoff (AT208-CN-RGB)' },
+  { id: 10, time: '10:19:44', aircraft: 'E12', flightId: 'AT706',     severity: 'WARNING',  message: 'Flap Overspeed — Vfe Exceeded (AT706-CN-ROB)' },
+]
+
+// Fuel efficiency trend (past 8 months)
+export const fuelEfficiencyData: FuelDataPoint[] = [
+  { month: 'Jan', value: 78 },
+  { month: 'Feb', value: 64 },
+  { month: 'Mar', value: 68 },
+  { month: 'Apr', value: 55 },
+  { month: 'May', value: 52 },
+  { month: 'Jun', value: 48 },
+  { month: 'Jul', value: 44 },
+  { month: 'Aug', value: 22 },
+]
+
+// Maintenance donut data
+export const maintenanceStatusData = [
+  { name: 'Critical', value: 3, color: '#ef4444' },
+  { name: 'Warning',  value: 7, color: '#f97316' },
+  { name: 'Response', value: 12, color: '#475569' },
+]
+
+// Pilot performance
+export const pilotPerformanceData: PilotStats = {
+  summary: 7,
+  positions: [
+    { label: 'Jan', value: 4 },
+    { label: 'Feb', value: 6 },
+    { label: 'Mar', value: 3 },
+    { label: 'Apr', value: 7 },
+    { label: 'May', value: 5 },
+    { label: 'Jun', value: 8 },
+  ],
+}
