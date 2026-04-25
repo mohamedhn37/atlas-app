@@ -1,4 +1,4 @@
-export type AircraftType = 'Boeing 737' | 'Boeing 777' | 'Boeing 787' | 'ATR 42' | 'ATR 72'
+export type AircraftType = 'Boeing 737' | 'Boeing 737 MAX' | 'Boeing 787' | 'ATR 72' | 'ATR 42'
 export type FileFormat = 'QAR' | 'FDR' | 'CPL'
 export type ExceedanceSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
 
