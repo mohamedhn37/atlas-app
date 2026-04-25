@@ -57,3 +57,42 @@ export interface FleetStats {
   fleetUtilization: number
   onTimePerformance: number
 }
+
+export interface AircraftPosition {
+  id: string
+  registration: string
+  flightNumber: string
+  lat: number
+  lon: number
+  heading: number
+  altitude: number
+  speed: number
+  status: 'normal' | 'warning' | 'critical'
+  origin: string
+  destination: string
+}
+
+export interface FlightRoute {
+  from: [number, number]
+  to: [number, number]
+  flightNumber: string
+}
+
+export interface AlertEntry {
+  id: number
+  time: string
+  aircraft: string
+  flightId: string
+  severity: 'WARNING' | 'CRITICAL'
+  message: string
+}
+
+export interface FuelDataPoint {
+  month: string
+  value: number
+}
+
+export interface PilotStats {
+  summary: number
+  positions: { label: string; value: number }[]
+}
